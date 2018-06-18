@@ -44,7 +44,8 @@ class Main {
       List<Second> secondsOut = Lists.newArrayList();
       Multiset<String> seconds = entry.getValue();
       for (Multiset.Entry<String> entry2 : seconds.entrySet()) {
-        secondsOut.add(Second.create(entry2.getCount(), entry2.getElement()));
+        secondsOut.add(Second.create(entry2.getCount(), entry2.getElement(),
+            Letters.getCharacters(entry2.getElement())));
       }
       Collections.sort(secondsOut, new Comparator<Second>() {
         public int compare(Second o1, Second o2) {

@@ -1,6 +1,5 @@
 package net.jimblackler.ancredible;
 
-
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
@@ -15,7 +14,7 @@ class Solver {
   void solve(String string) {
     PriorityQueue<Result> results =
         new PriorityQueue<>((o1, o2) -> Integer.compare(o1.score(), o2.score()));
-    solve("^", Letters.getCharacters(string), "", 0, results);
+      solve("^", Letters.getCharacters(string), "", 0, results);
   }
 
   private void solve(String prior, byte[] remain, String soFar, int score,
@@ -38,7 +37,7 @@ class Solver {
       return;
     }
     for (Second second : seconds) {
-      byte[] characters = Letters.getCharacters(second.word());
+      byte[] characters = second.letters();
       if (!Letters.isSubset(characters, remain)) {
         continue;
       }
