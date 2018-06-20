@@ -1,24 +1,42 @@
 package net.jimblackler.ancredible;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
 class Solver {
-  private final Map<String, List<Second>> pairs;
 
-  Solver(Map<String, List<Second>> pairs) {
-    this.pairs = pairs;
-  }
-
-  void solve(String string) {
+  static void solve(String string, Map<String, List<Second>> pairs) {
     PriorityQueue<Result> results =
         new PriorityQueue<>((o1, o2) -> Integer.compare(o1.score(), o2.score()));
-      solve("^", Letters.getCharacters(string), "", 0, results);
+    byte[] characters = Letters.getCharacters(string);
+    Map<String, List<Second>> scrubbed = Maps.newHashMap();
+    for (Map.Entry<String, List<Second>> entry : pairs.entrySet()) {
+      String first = entry.getKey();
+      if (!Letters.isSubset(Letters.getCharacters(first), characters)) {
+        continue;
+      }
+      List<Second> out = Lists.newArrayList();
+      for (Second second : entry.getValue()) {
+        if (Letters.isSubset(second.letters(), characters)) {
+          out.add(second);
+        }
+      }
+      if (!out.isEmpty()) {
+
+        scrubbed.put(first, out);
+      }
+    }
+
+    solve(scrubbed, "^", characters, "", 0, results);
   }
 
-  private void solve(String prior, byte[] remain, String soFar, int score,
-                     PriorityQueue<Result> results) {
+  private static void solve(Map<String, List<Second>> pairs,
+                            String prior, byte[] remain, String soFar, int score,
+                            PriorityQueue<Result> results) {
     if (Letters.count(remain) == 0) {
       if (results.size() == 20) {
         Result lowest = results.peek();
@@ -44,7 +62,7 @@ class Solver {
 
       byte[] remain2 = Letters.difference(remain, characters);
       String prior2 = second.word();
-      solve(prior2, remain2, soFar.isEmpty() ? second.word() : soFar + " " + second.word(),
+      solve(pairs, prior2, remain2, soFar.isEmpty() ? second.word() : soFar + " " + second.word(),
           score + second.frequency(), results);
     }
   }
