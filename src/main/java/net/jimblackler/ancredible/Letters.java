@@ -20,6 +20,9 @@ public class Letters {
     return count;
   }
 
+  /**
+   * Is 'a' a subset of 'b'?
+   */
   static boolean isSubset(byte[] a, byte[] b) {
     for (int idx = 0; idx != 26; idx++) {
       if (b[idx] < a[idx]) {
